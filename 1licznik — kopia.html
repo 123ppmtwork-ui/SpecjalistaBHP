@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dni bez wypadku przy pracy</title>
+  <style>
+    body {
+      margin: 0;
+      background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+      color: #FEE715;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    header {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    header img {
+      height: 100px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 4px rgba(255,255,255,0.6));
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin: 1.5em 0 0.3em;
+      letter-spacing: 2px;
+    }
+
+    #days {
+      font-size: 15rem;
+      font-weight: 900;
+      line-height: 1;
+      color: #00FF88;
+      text-shadow: 0 0 20px #00FF88;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    #days.animate {
+      transform: scale(1.1);
+    }
+
+    #clock {
+      font-size: 2rem;
+      color: #ccc;
+      margin-top: 1rem;
+    }
+
+#info {
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+  max-width: 90%;
+  line-height: 1.4;
+  color: #ff6666;
+  text-shadow: 0 0 10px rgba(255, 80, 80, 0.6);
+  font-weight: 500;
+}
+
+    #slogan-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+
+    #helmet-icon {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 0.5rem;
+      fill: #00FF88;
+      filter: drop-shadow(0 0 6px #00FF88);
+    }
+
+    #slogan {
+      font-size: 1.8rem;
+      color: #FEE715;
+      text-shadow: 0 0 12px #FEE715;
+      font-weight: bold;
+      animation: pulse 3s infinite alternate;
+      max-width: 90%;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    @keyframes pulse {
+      0% { text-shadow: 0 0 6px rgba(255,255,255,0.3); }
+      100% { text-shadow: 0 0 15px rgba(0,255,136,0.7); }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      #days { font-size: 8rem; }
+      #clock { font-size: 1.2rem; }
+      #info { font-size: 1rem; }
+      #slogan { font-size: 1.2rem; }
+      #helmet-icon { width: 35px; height: 35px; }
+      header img { height: 60px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Logo PPM-T">
+  </header>
+
+  <h1>DNI BEZ WYPADKU PRZY PRACY</h1>
+  <div id="days">0</div>
+  <div id="clock"></div>
+  <div id="info">W tym roku zanotowano 6 wypadków przy pracy, ostatni miał miejsce w dniu 04.08.2025 r.</div>
+
+  <div id="slogan-container">
+    <svg id="helmet-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+      <path d="M32 2C15.458 2 2 15.458 2 32h60C62 15.458 48.542 2 32 2zm0 6c14.359 0 26 11.641 26 26H6c0-14.359 11.641-26 26-26zM14 32c0-9.941 8.059-18 18-18s18 8.059 18 18H14z"/>
+    </svg>
+    <div id="slogan">Uważaj na siebie i innych – bezpieczeństwo przede wszystkim – <br>Bezpiecznej pracy życzy Zarząd PPM-T oraz Dział BHP</div>
+  </div>
+
+  <script>
+    const daysDisplay = document.getElementById('days');
+    const clock = document.getElementById('clock');
+
+    const accidentDate = new Date('2025-08-04'); // 🗓️ Ustaw datę ostatniego wypadku
+
+    function calculateDays() {
+      const now = new Date();
+      const diffTime = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) -
+                       Date.UTC(accidentDate.getFullYear(), accidentDate.getMonth(), accidentDate.getDate());
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+      if (daysDisplay.textContent != diffDays) {
+        daysDisplay.textContent = diffDays;
+        daysDisplay.classList.add('animate');
+        setTimeout(() => daysDisplay.classList.remove('animate'), 400);
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = now.toLocaleDateString('pl-PL', options);
+      const timeStr = now.toLocaleTimeString('pl-PL');
+      clock.textContent = `${dateStr} — ${timeStr}`;
+    }
+
+    window.onload = () => {
+      calculateDays();
+      updateClock();
+      setInterval(updateClock, 1000);
+      setInterval(calculateDays, 60000);
+    };
+  </script>
+</body>
+</html>
